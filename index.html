@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Make Ten</title>
+  <link rel="stylesheet" type="text/css" href="css/bulma.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1 class="title pt-6">Make Ten</h1>
+    <p class="subtitle">Inserts math operators between digits to equal 10</p>
+    <nav class="hidden">
+      <li class="nav-item">Item</li>
+      <li class="nav-item">Item</li>
+    </nav>
+  </header>
+  <main role="main">
+  <form class="numbers">
+    <button id="btn-add" class="button is-outlined math" type="button">+</button>
+    <div class="digit">
+      <input id="target-input" type="text" title="Number" class="input math" placeholder="10">
+    </div>
+    <div id="digit" class="digit template">
+      <input type="text" title="Number" class="input math" maxlength="1">
+      <button class="delete hidden" type="button" tabindex="-1">Delete</button>
+    </div>
+    <div id="filler" class="digit"></div>
+  </form>
+  <div id="error"></div>
+  <div id="solutions"></div>
+  </main>
+  <footer>
+    <!-- <p>2022</p> -->
+  </footer>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
