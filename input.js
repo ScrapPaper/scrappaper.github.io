@@ -77,6 +77,12 @@ const handleDigitInput = (e) => {
     } else if (e.key === 'Enter' || e.key === 'ArrowRight') {
         nextInput && nextInput.focus();
         e.preventDefault();
+    // Android keyboard behaviour
+    } else if (e.key === 'Unidentified') {
+        error = 'Please enter digits (0 - 9) only';
+        e.preventDefault(); // Doesn't work...
+        const oldValue = input.value;
+        setTimeout(() => input.value = oldValue, 0); // Workaround
     // Single key inputs
     } else if (/^.$/.test(e.key) && !e.altKey && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();

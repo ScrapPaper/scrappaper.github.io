@@ -21,10 +21,10 @@
   <form class="numbers">
     <button id="btn-add" class="button is-outlined math" type="button">+</button>
     <div class="digit">
-      <input id="target-input" type="text" title="Number" class="input math" placeholder="10">
+      <input id="target-input" inputmode="numeric" pattern="[0-9]*" type="text" title="Number" class="input math" placeholder="10">
     </div>
     <div id="digit" class="digit template">
-      <input type="text" title="Number" class="input math" maxlength="1">
+      <input inputmode="numeric" pattern="[0-9]*" type="text" title="Number" class="input math" maxlength="1">
       <button class="delete hidden" type="button" tabindex="-1">Delete</button>
     </div>
     <div id="filler" class="digit"></div>
