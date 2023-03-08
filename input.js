@@ -3,6 +3,9 @@
 
 // Creates a new digit input
 const addDigit = (before) => {
+    if (numDigits >= maxDigits) {
+        return;
+    }
     const digitTemplate = document.getElementById('digit');
     const numbers = digitTemplate.parentElement;
     // Create and insert the new digit
@@ -29,8 +32,10 @@ const addDigit = (before) => {
     btnDelete.addEventListener('click', () => {
         delDigit(input);
     });
-    numDigits++;
     setTimeout(onUpdateEvent, 0);
+    if (++numDigits >= maxDigits) {
+        document.getElementById('btn-add').classList.add('hidden');
+    }
 };
 
 // Deletes a digit `input`
@@ -41,6 +46,7 @@ const delDigit = (input) => {
         numDigits--;
         setTimeout(onUpdateEvent, 0);
     }
+    document.getElementById('btn-add').classList.remove('hidden');
 };
 
 // Handles digit input validation and navigation on key down
@@ -154,6 +160,7 @@ export const addUpdateListener = (listener) => {
 };
 
 let minDigits = 2;
+let maxDigits = 7;
 let numDigits = 0;
 
 for (let i = 0; i < 4; i++) {

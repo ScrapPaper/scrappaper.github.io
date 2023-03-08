@@ -53,13 +53,13 @@ const main = (e) => {
     }
     
     // Display solutions
-    let i, solution;
-    for (i = 0; solution = traverse(dp, 0, size-1, e.target, true, i); i++) {
+    const solutionSet = traverse(dp, 0, size-1, e.target);
+    for (let solution of solutionSet) {
         const display = document.createElement('div');
         display.innerText = solution + ' = ' + e.target;
         solutions.appendChild(display);
     }
-    if (i === 0) {
+    if (solutionSet.size === 0) {
         const display = document.createElement('div');
         display.innerText = 'No solutions';
         solutions.appendChild(display);
@@ -67,29 +67,62 @@ const main = (e) => {
 };
 
 // Retrieves solutions by recursively traversing a solution structure
-const traverse = (dp, start, end, target, head, i) => {
+const maxSolutions = 16;
+const traverse = (dp, start, end, target, parent) => {
+    const solutions = new Set();
     const cur = dp[start][end].get(target);
     if (cur === undefined) {
-        return false;
+        return solutions;
     }
-    const ans = cur[i || 0];
-    if (ans === undefined) {
-        return false;
+    // Apply brackets if operator is lower precedence than parent operator
+    const precedence = {
+        '!' : 4,
+        '/(': 3, '/' : 2, '*(': 2, '*' : 2,
+        '-(': 1, '-' : 0, '+(': 0, '+' : 0,
     }
-    switch (ans[0]) {
-        case '#':
-            return ans[1];
-        case '+': case '-': case '*': case '/':
-            return (head ? '' : '(') +
-                    traverse(dp, start, ans[1], ans[2]) +
-                    ' ' + ans[0] + ' ' +
-                    traverse(dp, ans[1]+1, end, ans[3]) +
-                   (head ? '' : ')');
-        case '!':
-            return traverse(dp, start, end, ans[1]) + '!';
-        default:
-            return;
+    traversal:
+    // Iterate over all possible last steps of reaching the current solution
+    for (let ans of cur) {
+        const operator = ans[0];
+        switch (operator) {
+            // The step used an input digit itself
+            case '#':
+                solutions.add(ans[1]);
+                break;
+            // The step used addition, subtraction, multiplication or division
+            case '+': case '-': case '*': case '/':
+                let b, brackets;
+                const operatorB = operator + '(';
+                // Iterate over possible solutions for obtaining both operands
+                for (let a of traverse(dp, start, ans[1], ans[2], operator)) {
+                    for (b of traverse(dp, ans[1]+1, end, ans[3], operatorB)) {
+                        // Add to solution set
+                        brackets = precedence[operator] < precedence[parent];
+                        solutions.add(
+                            (brackets ? '(' : '') +
+                            a + ' ' + operator + ' ' + b +
+                            (brackets ? ')' : '')
+                        );
+                        if (solutions.size === maxSolutions) {
+                            break traversal;
+                        }
+                    }
+                }
+                break;
+            // The step involved applying the factorial function
+            case '!':
+                // Iterate over possible solutions for obtaining `n`
+                for (let n of traverse(dp, start, end, ans[1], operator)) {
+                    // Add to solution set
+                    solutions.add(n + operator);
+                    if (solutions.size === maxSolutions) {
+                        break traversal;
+                    }
+                }
+                break;
+        }
     }
+    return solutions;
 }
 
 // Creates a solution structure
